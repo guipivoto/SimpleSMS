@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SimpleSMS</string>
+    <string name="delete">Delete</string>
+    <string name="block">Bloquear</string>
+</resources>
