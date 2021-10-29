@@ -35,7 +35,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.1"
+        kotlinCompilerExtensionVersion = Versions.compose
     }
 }
 
@@ -52,7 +52,9 @@ dependencies {
 
     // Dagger
     implementation("com.google.dagger:hilt-android:${Versions.dagger}")
-    kapt("com.google.dagger:hilt-compiler:${Versions.dagger}")
+    kapt("com.google.dagger:hilt-android-compiler:${Versions.dagger}")
 
+    // Internal
     implementation(project(":features:inbox"))
+    implementation(project(":repository:message"))
 }

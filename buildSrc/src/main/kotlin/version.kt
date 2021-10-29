@@ -8,7 +8,7 @@ object App {
 
 object Versions {
     const val gradle = "7.0.3"
-    const val kotlin = "1.5.21"
+    const val kotlin = "1.5.31"
     const val kotlinCore = "1.6.0"
     const val dagger = "2.39.1"
     const val compose = "1.0.4"
