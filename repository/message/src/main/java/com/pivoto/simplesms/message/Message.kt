@@ -1,5 +1,5 @@
 package com.pivoto.simplesms.message
 
-data class Message(val id: Int, val number: String, val text: String) {
+data class Message(val id: Int, val address: String, val date: Long, val body: String) {
 
 }
