@@ -39,6 +39,7 @@ dependencies {
     // Compose
     implementation("androidx.compose.ui:ui:${Versions.compose}")
     implementation("androidx.compose.material:material:${Versions.compose}")
+    implementation("androidx.compose.runtime:runtime-livedata:${Versions.compose}")
 
     // Dagger
     implementation("com.google.dagger:hilt-android:${Versions.dagger}")
