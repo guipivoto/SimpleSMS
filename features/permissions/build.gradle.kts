@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("kotlin-android")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
@@ -9,11 +9,8 @@ android {
     compileSdk = App.compileSdk
 
     defaultConfig {
-        applicationId = "com.pivoto.simplesms"
         minSdk = App.minSdk
         targetSdk = App.targetSdk
-        versionCode = App.targetSdk
-        versionName = App.versionName
     }
 
     buildTypes {
@@ -24,7 +21,6 @@ android {
             )
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -40,22 +36,16 @@ android {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:${Versions.appCompat}")
-    implementation("androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}")
-    implementation("androidx.core:core-ktx:${Versions.kotlinCore}")
-
     // Compose
     implementation("androidx.compose.ui:ui:${Versions.compose}")
-
-    // Navigation
-    implementation("androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigationCompose}")
+    implementation("androidx.compose.material:material:${Versions.compose}")
+    implementation("androidx.compose.runtime:runtime-livedata:${Versions.compose}")
 
     // Dagger
     implementation("com.google.dagger:hilt-android:${Versions.dagger}")
     kapt("com.google.dagger:hilt-android-compiler:${Versions.dagger}")
 
-    // Internal
-    implementation(project(":features:inbox"))
-    implementation(project(":features:permissions"))
-    implementation(project(":repository:message"))
+    // Navigation
+    implementation("androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigationCompose}")
+    implementation("androidx.test.ext:junit-ktx:1.1.3")
 }
