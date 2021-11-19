@@ -9,21 +9,22 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 class MessageRepositoryImpl @Inject constructor(@ApplicationContext val context: Context) :
     MessageRepository {
 
-    override suspend fun getMessages(): List<Message> {
+    override suspend fun getMessages(): List<Message> = withContext(Dispatchers.IO) {
         val result: MutableList<Message> = mutableListOf()
 
         val cursor = context.contentResolver.query(
             Uri.parse("content://sms"),
-            arrayOf(BaseColumns._ID, Sms.ADDRESS, Sms.DATE, Sms.BODY),
-            null,
-            null,
-            null
+            arrayOf("DISTINCT ${Sms.ADDRESS}", BaseColumns._ID, Sms.DATE, Sms.BODY),
+            "${Sms.ADDRESS} IS NOT NULL) GROUP BY (${Sms.ADDRESS}",
+            null, null
         )
 
         if (cursor?.moveToFirst() == true) {
@@ -43,7 +44,7 @@ class MessageRepositoryImpl @Inject constructor(@ApplicationContext val context:
         }
         cursor?.close()
 
-        return result
+        result
     }
 }
 

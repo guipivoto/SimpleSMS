@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="permissions_not_default_app">SimplesSMS is not the default app</string>
+    <string name="permissions_not_granted">Necessary permissions not granted</string>
+    <string name="permissions_not_granted_rationale">Go to settings and grant necessary permissions</string>
 </resources>
