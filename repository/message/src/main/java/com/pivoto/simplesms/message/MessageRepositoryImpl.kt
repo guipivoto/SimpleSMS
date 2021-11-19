@@ -20,29 +20,28 @@ class MessageRepositoryImpl @Inject constructor(@ApplicationContext val context:
     override suspend fun getMessages(): List<Message> = withContext(Dispatchers.IO) {
         val result: MutableList<Message> = mutableListOf()
 
-        val cursor = context.contentResolver.query(
+        context.contentResolver.query(
             Uri.parse("content://sms"),
             arrayOf("DISTINCT ${Sms.ADDRESS}", BaseColumns._ID, Sms.DATE, Sms.BODY),
             "${Sms.ADDRESS} IS NOT NULL) GROUP BY (${Sms.ADDRESS}",
             null, null
-        )
+        ).use { cursor ->
 
-        if (cursor?.moveToFirst() == true) {
-            val idCol = cursor.getColumnIndex(BaseColumns._ID)
-            val addressCol = cursor.getColumnIndex(Sms.ADDRESS)
-            val dateCol = cursor.getColumnIndex(Sms.DATE)
-            val bodyCol = cursor.getColumnIndex(Sms.BODY)
-
-            do {
-                result.add(Message(
-                    cursor.getInt(idCol),
-                    cursor.getString(addressCol),
-                    cursor.getLong(dateCol),
-                    cursor.getString(bodyCol)
-                ))
-            } while (cursor.moveToNext())
+            while (cursor?.moveToNext() == true) {
+                val idCol = cursor.getColumnIndex(BaseColumns._ID)
+                val addressCol = cursor.getColumnIndex(Sms.ADDRESS)
+                val dateCol = cursor.getColumnIndex(Sms.DATE)
+                val bodyCol = cursor.getColumnIndex(Sms.BODY)
+                result.add(
+                    Message(
+                        cursor.getInt(idCol),
+                        cursor.getString(addressCol),
+                        cursor.getLong(dateCol),
+                        cursor.getString(bodyCol)
+                    )
+                )
+            }
         }
-        cursor?.close()
 
         result
     }
