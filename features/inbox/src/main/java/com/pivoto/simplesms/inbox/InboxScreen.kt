@@ -51,7 +51,9 @@ private fun InboxLoaded(messageList: List<Message>) {
 
 @Composable
 fun MessageCard(msg: Message) {
-    Surface(shape = MaterialTheme.shapes.medium, elevation = 1.dp) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium, elevation = 1.dp) {
         Column {
             Text(
                 text = msg.address,
@@ -62,7 +64,7 @@ fun MessageCard(msg: Message) {
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = msg.body,
+                text = msg.body ?: "null",
                 modifier = Modifier.padding(all = 4.dp),
                 style = MaterialTheme.typography.body2
             )

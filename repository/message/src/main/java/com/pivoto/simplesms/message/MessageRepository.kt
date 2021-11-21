@@ -5,4 +5,6 @@ sealed interface MessageRepository {
     suspend fun getMessages(): List<Message>
 
     suspend fun insertNewMessage(message: Message)
+
+    suspend fun deleteMessage(address: String, date: Long)
 }

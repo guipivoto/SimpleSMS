@@ -2,9 +2,12 @@ package com.pivoto.simplesms.message
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
 import android.provider.BaseColumns
+import android.provider.Telephony
 import android.provider.Telephony.Sms
+import android.util.Log
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,23 +26,20 @@ class MessageRepositoryImpl @Inject constructor(@ApplicationContext val context:
 
         context.contentResolver.query(
             Uri.parse("content://sms"),
-            arrayOf("DISTINCT ${Sms.ADDRESS}", BaseColumns._ID, Sms.DATE, Sms.BODY),
+            null,
             "${Sms.ADDRESS} IS NOT NULL) GROUP BY (${Sms.ADDRESS}",
             null, null
         ).use { cursor ->
 
             while (cursor?.moveToNext() == true) {
-                val idCol = cursor.getColumnIndex(BaseColumns._ID)
-                val addressCol = cursor.getColumnIndex(Sms.ADDRESS)
-                val dateCol = cursor.getColumnIndex(Sms.DATE)
-                val bodyCol = cursor.getColumnIndex(Sms.BODY)
                 result.add(
                     Message(
-                        cursor.getInt(idCol),
-                        cursor.getString(addressCol),
-                        cursor.getLong(dateCol),
-                        cursor.getString(bodyCol)
-                    )
+                        cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(Sms.ADDRESS)),
+                        cursor.getLong(cursor.getColumnIndexOrThrow(Sms.DATE))
+                    ).apply {
+                        body = cursor.getString(cursor.getColumnIndexOrThrow(Sms.BODY))
+                    }
                 )
             }
         }
@@ -60,6 +60,37 @@ class MessageRepositoryImpl @Inject constructor(@ApplicationContext val context:
             put(Sms.Inbox.SERVICE_CENTER, message.serviceCenter)
         }
         context.contentResolver.insert(Sms.Inbox.CONTENT_URI, values)
+    }
+
+    override suspend fun deleteMessage(address: String, date: Long) {
+        context.contentResolver.query(
+            Sms.CONTENT_URI,
+            arrayOf(Sms._ID, Sms.ADDRESS, Sms.DATE),
+            Sms.DATE + " = ? AND " + Sms.ADDRESS + " = ? ",
+            arrayOf(date.toString(), address),
+            null
+        ).use { cursor ->
+            if (compareValues(cursor?.count, 0) > 0 && cursor?.moveToFirst() == true) {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(Sms._ID))
+                val foundAddress = cursor.getString(cursor.getColumnIndexOrThrow(Sms.ADDRESS))
+                val foundDate = cursor.getLong(cursor.getColumnIndexOrThrow(Sms.DATE))
+                Log.d(
+                    "TESTS",
+                    "deleteSMS() Result: " + cursor.count + " Message Deleted -  id: " + id + " address: " + foundAddress + " date: " + foundDate
+                )
+                val result =
+                    context.contentResolver.delete(Uri.parse("content://sms/$id"), null, null)
+                Log.d("TESTS", "Messages deleted: $result")
+            } else {
+                if (cursor == null) Log.w(
+                    "TESTS",
+                    "cursor is null"
+                ) else Log.w(
+                    "TESTS",
+                    "cursor is not null.. count(): " + cursor.count
+                )
+            }
+        }
     }
 }
 

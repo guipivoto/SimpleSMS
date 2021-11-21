@@ -31,11 +31,10 @@ class SmsReceiver : BroadcastReceiver() {
             Log.v(Tags.RECEIVER, "onReceiver: $action")
             when (action) {
                 "android.provider.Telephony.SMS_DELIVER", Telephony.Sms.Intents.SMS_RECEIVED_ACTION -> {
-                    // SMS Received
                     handleSmsReceived(intent.extras)
                 }
                 "com.pivoto.simplesms.DELETE_MESSAGE" -> {
-                    // Delete SMS
+                    handleDeleteSms(intent.extras)
                 }
                 "com.pivoto.simplesms.BLOCK_CONTACT_MESSAGE" -> {
                     // Block contact
@@ -63,21 +62,37 @@ class SmsReceiver : BroadcastReceiver() {
             pduArray.forEach { pdu ->
                 if (pdu is ByteArray) {
                     SmsMessage.createFromPdu(pdu, format)?.also {
-                        val messagePage = Message(it)
-                        storeSms(messagePage)
+                        val message = Message(it)
 
-                        Log.v(Tags.RECEIVER, "New SMS: $messagePage")
-                        notification.displayNotification(messagePage)
+                        runBlocking {
+                            launch {
+                                repository.insertNewMessage(message)
+                            }
+                        }
+
+                        Log.v(Tags.RECEIVER, "New SMS: $message")
+                        notification.displayNotification(message)
                     }
                 }
             }
         }
     }
 
-    private fun storeSms(message: Message) {
+    private fun handleDeleteSms(extras: Bundle?) {
+        if (extras == null) {
+            return
+        }
+
+        notification.clearNotification(extras)
+
+        val address: String = extras.getString("address", "")
+        val date: Long = extras.getLong("date", -1)
+
+        Log.v(Tags.RECEIVER, "onReceive() delete message from: $address date: $date")
+
         runBlocking {
             launch {
-                repository.insertNewMessage(message)
+                repository.deleteMessage(address, date)
             }
         }
     }

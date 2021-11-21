@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.RingtoneManager
+import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -125,6 +126,15 @@ class MessageNotification {
         }
 
         notificationManager.notify(notificationId, notification)
+    }
+
+    fun clearNotification(extras: Bundle?) {
+        extras?.getInt("notiID", -1)?.also {
+            if(it > 0) {
+                NotificationManagerCompat.from(context).cancel(it)
+            }
+        }
+
     }
 
     companion object {
