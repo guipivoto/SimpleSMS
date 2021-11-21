@@ -1,5 +1,6 @@
 package com.pivoto.simplesms.message
 
+import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import android.provider.BaseColumns
@@ -42,8 +43,23 @@ class MessageRepositoryImpl @Inject constructor(@ApplicationContext val context:
                 )
             }
         }
-
         result
+    }
+
+    override suspend fun insertNewMessage(message: Message): Unit = withContext(Dispatchers.IO) {
+        val values = ContentValues().apply {
+            put(Sms.Inbox.ADDRESS, message.address)
+            put(Sms.DATE, message.date)
+            put(Sms.Inbox.BODY, message.body)
+            put(Sms.Inbox.DATE_SENT, message.dateSent)
+            put(Sms.Inbox.PROTOCOL, message.protocol)
+            put(Sms.Inbox.READ, message.read)
+            put(Sms.Inbox.SEEN, message.seen)
+            put(Sms.Inbox.SUBJECT, message.subject)
+            put(Sms.Inbox.REPLY_PATH_PRESENT, message.replyPath)
+            put(Sms.Inbox.SERVICE_CENTER, message.serviceCenter)
+        }
+        context.contentResolver.insert(Sms.Inbox.CONTENT_URI, values)
     }
 }
 

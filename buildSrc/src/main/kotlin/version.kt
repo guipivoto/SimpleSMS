@@ -14,7 +14,7 @@ object Versions {
     const val dagger = "2.39.1"
     const val compose = "1.0.4"
 
-    const val hiltNavigationCompose = "1.0.0-alpha03"
+    const val hiltNavigationCompose = "1.0.0-beta01"
     const val appCompat = "1.3.1"
     const val constraintLayout = "2.1.1"
 }

@@ -58,4 +58,7 @@ dependencies {
     implementation(project(":features:inbox"))
     implementation(project(":features:permissions"))
     implementation(project(":repository:message"))
+    implementation(project(":components:notification"))
+    implementation(project(":components:receiver"))
+    implementation(project(":components:service"))
 }

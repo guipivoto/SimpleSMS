@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".SmsReceiver"
+        <receiver android:name=".receiver.SmsReceiver"
             android:permission="android.permission.BROADCAST_SMS"
             android:exported="true">
             <intent-filter>
@@ -51,7 +51,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".MmsReceiver"
+        <receiver android:name=".receiver.MmsReceiver"
             android:permission="android.permission.BROADCAST_WAP_PUSH"
             android:exported="true">
             <intent-filter>
@@ -60,7 +60,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".MessagingService"
+        <service android:name=".service.MessagingService"
             android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE"
             android:exported="true" >
             <intent-filter>

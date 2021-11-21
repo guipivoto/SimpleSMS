@@ -1,0 +1,5 @@
+<resources>
+    <string name="new_message_notification_channel">SimpleSMS</string>
+    <string name="delete">Delete</string>
+    <string name="block">Block</string>
+</resources>
