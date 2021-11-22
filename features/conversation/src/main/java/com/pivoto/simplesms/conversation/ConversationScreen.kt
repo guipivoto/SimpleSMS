@@ -1,6 +1,5 @@
-package com.pivoto.simplesms.inbox
+package com.pivoto.simplesms.conversation
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,52 +12,50 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.pivoto.simplesms.inbox.nav.InboxNav
 import com.pivoto.simplesms.message.Message
 
 @Composable
-fun InboxScreen(viewModel: InboxScreenViewModel, actionHandler: InboxNav.InboxScreenActions) {
-    val inboxState = viewModel.inboxState.observeAsState()
-    InboxContent(state = inboxState, actionHandler)
+fun ConversationScreen(viewModel: ConversationScreenViewModel) {
+    val conversationState = viewModel.conversationState.observeAsState()
+    ConversationContent(state = conversationState)
 }
 
 @Composable
-fun InboxContent(state: State<InboxState?>, actionHandler: InboxNav.InboxScreenActions) {
+fun ConversationContent(state: State<ConversationState?>) {
     when (state.value) {
-        is InboxState.Loading -> LoadingInbox()
-        is InboxState.Empty -> EmptyInbox()
-        is InboxState.Loaded -> InboxLoaded((state.value as InboxState.Loaded).messageList, actionHandler)
+        is ConversationState.Loading -> LoadingConversation()
+        is ConversationState.Empty -> EmptyConversation()
+        is ConversationState.Loaded -> ConversationLoaded((state.value as ConversationState.Loaded).messageList)
         else -> Unit
     }
 }
 
 @Composable
-private fun LoadingInbox() {
-    Text(text = stringResource(id = R.string.inbox_loading_list))
+private fun LoadingConversation() {
+    Text(text = stringResource(id = R.string.conversation_loading_list))
 }
 
 @Composable
-private fun EmptyInbox() {
-    Text(text = stringResource(id = R.string.inbox_empty_list))
+private fun EmptyConversation() {
+    Text(text = stringResource(id = R.string.conversation_empty_list))
 }
 
 @Composable
-private fun InboxLoaded(messageList: List<Message>, actionHandler: InboxNav.InboxScreenActions) {
+private fun ConversationLoaded(messageList: List<Message>) {
     LazyColumn {
         items(messageList) { message ->
-            MessageCard(message, actionHandler)
+            MessageCard(message)
         }
     }
 }
 
 @Composable
-fun MessageCard(msg: Message, actionHandler: InboxNav.InboxScreenActions) {
+fun MessageCard(msg: Message) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.medium, elevation = 1.dp) {
-        Column(Modifier.clickable {
-            actionHandler.onConversationOpened(msg.address)
-        }) {
+        shape = MaterialTheme.shapes.medium, elevation = 1.dp
+    ) {
+        Column {
             Text(
                 text = msg.address,
                 color = MaterialTheme.colors.secondaryVariant,
@@ -75,4 +72,3 @@ fun MessageCard(msg: Message, actionHandler: InboxNav.InboxScreenActions) {
         }
     }
 }
-

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="conversation_empty_list">Conversation is empty</string>
+    <string name="conversation_loading_list">Conversation is loading</string>
+</resources>

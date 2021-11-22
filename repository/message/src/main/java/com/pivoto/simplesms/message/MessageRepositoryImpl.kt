@@ -21,7 +21,7 @@ import javax.inject.Singleton
 class MessageRepositoryImpl @Inject constructor(@ApplicationContext val context: Context) :
     MessageRepository {
 
-    override suspend fun getMessages(): List<Message> = withContext(Dispatchers.IO) {
+    override suspend fun getConversations(): List<Message> = withContext(Dispatchers.IO) {
         val result: MutableList<Message> = mutableListOf()
 
         context.contentResolver.query(
@@ -44,6 +44,30 @@ class MessageRepositoryImpl @Inject constructor(@ApplicationContext val context:
             }
         }
         result
+    }
+
+    override suspend fun getConversation(address: String): List<Message> {
+        val result: MutableList<Message> = mutableListOf()
+        context.contentResolver.query(
+            Uri.parse("content://sms"),
+            null,
+            "${Sms.ADDRESS}=?",
+            arrayOf(address), null
+        ).use { cursor ->
+
+            while (cursor?.moveToNext() == true) {
+                result.add(
+                    Message(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(Sms.ADDRESS)),
+                        cursor.getLong(cursor.getColumnIndexOrThrow(Sms.DATE))
+                    ).apply {
+                        body = cursor.getString(cursor.getColumnIndexOrThrow(Sms.BODY))
+                    }
+                )
+            }
+        }
+        return result
     }
 
     override suspend fun insertNewMessage(message: Message): Unit = withContext(Dispatchers.IO) {

@@ -20,7 +20,7 @@ class InboxScreenViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _inboxState.value = InboxState.Loading
-            val messageList = messageRepository.getMessages()
+            val messageList = messageRepository.getConversations()
             _inboxState.value = if(messageList.isEmpty()) {
                 InboxState.Empty
             } else {

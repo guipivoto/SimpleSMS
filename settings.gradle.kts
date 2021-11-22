@@ -1,6 +1,7 @@
 include(":app")
-include(":features:inbox")
 include(":features:permissions")
+include(":features:inbox")
+include(":features:conversation")
 include(":repository:message")
 include(":components:service")
 include(":components:receiver")

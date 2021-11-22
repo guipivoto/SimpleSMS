@@ -11,10 +11,15 @@ class InboxNav @Inject constructor() {
 
     val destination = "Inbox"
 
-    fun createGraph(navGraphBuilder: NavGraphBuilder) {
+    fun createGraph(navGraphBuilder: NavGraphBuilder, actionHandler: InboxScreenActions) {
         navGraphBuilder.composable(destination) {
             val viewModel = hiltViewModel<InboxScreenViewModel>()
-            InboxScreen(viewModel)
+            InboxScreen(viewModel, actionHandler)
         }
+    }
+
+    interface InboxScreenActions {
+
+        fun onConversationOpened(messageAddress: String)
     }
 }

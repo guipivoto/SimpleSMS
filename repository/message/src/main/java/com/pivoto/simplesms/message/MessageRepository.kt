@@ -2,7 +2,9 @@ package com.pivoto.simplesms.message
 
 sealed interface MessageRepository {
 
-    suspend fun getMessages(): List<Message>
+    suspend fun getConversations(): List<Message>
+
+    suspend fun getConversation(address: String): List<Message>
 
     suspend fun insertNewMessage(message: Message)
 
