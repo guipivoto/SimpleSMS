@@ -7,23 +7,26 @@ import android.os.Bundle
 import android.provider.Telephony
 import android.telephony.SmsMessage
 import android.util.Log
+import com.pivoto.simplesms.contact.ContactRepository
 import com.pivoto.simplesms.message.Message
 import com.pivoto.simplesms.message.MessageRepository
 import com.pivoto.simplesms.notification.MessageNotification
 import com.pivoto.simplesms.receiver.util.Tags
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SmsReceiver : BroadcastReceiver() {
 
     @Inject
-    lateinit var repository: MessageRepository
+    lateinit var messageRepository: MessageRepository
 
     @Inject
     lateinit var notification: MessageNotification
+
+    @Inject
+    lateinit var contactRepository: ContactRepository
 
     override fun onReceive(context: Context, intent: Intent) {
 
@@ -38,6 +41,7 @@ class SmsReceiver : BroadcastReceiver() {
                 }
                 "com.pivoto.simplesms.BLOCK_CONTACT_MESSAGE" -> {
                     // Block contact
+                    blockContact(intent.extras)
                 }
                 "com.pivoto.simplesms.TEST_INTENT" -> {
                     // Test Intent
@@ -45,6 +49,18 @@ class SmsReceiver : BroadcastReceiver() {
                 else -> {
                     Log.w(Tags.RECEIVER, "onReceiver unexpected action: $action")
                 }
+            }
+        }
+    }
+
+    private fun blockContact(extras: Bundle?) {
+        if (extras == null) {
+            return
+        }
+        extras.getString("address")?.also {
+            Log.v(Tags.RECEIVER, "Contact to block: $it")
+            runBlocking {
+                contactRepository.blockNumber(it)
             }
         }
     }
@@ -66,12 +82,17 @@ class SmsReceiver : BroadcastReceiver() {
 
                         runBlocking {
                             launch {
-                                repository.insertNewMessage(message)
+                                messageRepository.insertNewMessage(message)
+
+                                Log.v(Tags.RECEIVER, "New SMS: $message")
+
+                                if(!contactRepository.isBlocked(message.address)) {
+                                    notification.displayNotification(message)
+                                } else {
+                                    Log.v(Tags.RECEIVER, "Don't notify. Number blocked")
+                                }
                             }
                         }
-
-                        Log.v(Tags.RECEIVER, "New SMS: $message")
-                        notification.displayNotification(message)
                     }
                 }
             }
@@ -83,8 +104,6 @@ class SmsReceiver : BroadcastReceiver() {
             return
         }
 
-        notification.clearNotification(extras)
-
         val address: String = extras.getString("address", "")
         val date: Long = extras.getLong("date", -1)
 
@@ -92,7 +111,8 @@ class SmsReceiver : BroadcastReceiver() {
 
         runBlocking {
             launch {
-                repository.deleteMessage(address, date)
+                messageRepository.deleteMessage(address, date)
+                notification.clearNotification(extras)
             }
         }
     }

@@ -2,10 +2,8 @@ package com.pivoto.simplesms.message
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import android.provider.BaseColumns
-import android.provider.Telephony
 import android.provider.Telephony.Sms
 import android.util.Log
 import dagger.Binds

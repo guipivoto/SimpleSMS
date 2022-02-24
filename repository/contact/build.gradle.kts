@@ -2,7 +2,6 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     kotlin("kapt")
-    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -30,13 +29,12 @@ android {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutineCore}")
-
-    // Dagger
     implementation("com.google.dagger:hilt-android:${Versions.dagger}")
     kapt("com.google.dagger:hilt-android-compiler:${Versions.dagger}")
 
-    // Internal
-    implementation(project(":repository:message"))
-    implementation(project(":repository:contact"))
-    implementation(project(":components:notification"))
+    val roomVersion = "2.4.2"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
 }
