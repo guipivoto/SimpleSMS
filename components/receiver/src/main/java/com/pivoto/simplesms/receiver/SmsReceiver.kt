@@ -13,7 +13,8 @@ import com.pivoto.simplesms.message.MessageRepository
 import com.pivoto.simplesms.notification.MessageNotification
 import com.pivoto.simplesms.receiver.util.Tags
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -57,7 +58,7 @@ class SmsReceiver : BroadcastReceiver() {
         if (extras == null) {
             return
         }
-        extras.getString("address")?.also {
+        extras.getString(ADDRESS_KEY)?.also {
             Log.v(Tags.RECEIVER, "Contact to block: $it")
             runBlocking {
                 contactRepository.blockNumber(it)
@@ -69,8 +70,8 @@ class SmsReceiver : BroadcastReceiver() {
         if (extras == null) {
             return
         }
-        val pduArray = extras.get("pdus")
-        val format = extras.getString("format")
+        val pduArray = extras.get(PDU_KEY)
+        val format = extras.getString(FORMAT_KEY)
 
         Log.v(Tags.RECEIVER, "New SMS. pdus $pduArray format: $format")
 
@@ -104,8 +105,8 @@ class SmsReceiver : BroadcastReceiver() {
             return
         }
 
-        val address: String = extras.getString("address", "")
-        val date: Long = extras.getLong("date", -1)
+        val address: String = extras.getString(ADDRESS_KEY, "")
+        val date: Long = extras.getLong(DATE_KEY, -1)
 
         Log.v(Tags.RECEIVER, "onReceive() delete message from: $address date: $date")
 
@@ -115,5 +116,12 @@ class SmsReceiver : BroadcastReceiver() {
                 notification.clearNotification(extras)
             }
         }
+    }
+
+    companion object {
+        private const val ADDRESS_KEY = "address"
+        private const val DATE_KEY = "date"
+        private const val PDU_KEY = "pdus"
+        private const val FORMAT_KEY = "pdus"
     }
 }

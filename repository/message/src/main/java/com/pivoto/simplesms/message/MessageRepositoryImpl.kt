@@ -6,6 +6,7 @@ import android.net.Uri
 import android.provider.BaseColumns
 import android.provider.Telephony.Sms
 import android.util.Log
+import com.pivoto.simplesms.message.util.Tags
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -97,20 +98,14 @@ class MessageRepositoryImpl @Inject constructor(@ApplicationContext val context:
                 val foundAddress = cursor.getString(cursor.getColumnIndexOrThrow(Sms.ADDRESS))
                 val foundDate = cursor.getLong(cursor.getColumnIndexOrThrow(Sms.DATE))
                 Log.d(
-                    "TESTS",
+                    Tags.REPOSITORY,
                     "deleteSMS() Result: " + cursor.count + " Message Deleted -  id: " + id + " address: " + foundAddress + " date: " + foundDate
                 )
                 val result =
                     context.contentResolver.delete(Uri.parse("content://sms/$id"), null, null)
-                Log.d("TESTS", "Messages deleted: $result")
+                Log.d(Tags.REPOSITORY, "Messages deleted: $result")
             } else {
-                if (cursor == null) Log.w(
-                    "TESTS",
-                    "cursor is null"
-                ) else Log.w(
-                    "TESTS",
-                    "cursor is not null.. count(): " + cursor.count
-                )
+                Log.w(Tags.REPOSITORY, "cursor is null or empty: ${cursor?.count}")
             }
         }
     }

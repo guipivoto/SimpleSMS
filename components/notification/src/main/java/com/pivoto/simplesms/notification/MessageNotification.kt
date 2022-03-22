@@ -8,10 +8,12 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.pivoto.simplesms.message.Message
+import com.pivoto.simplesms.notification.util.Tags
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,15 +40,15 @@ class MessageNotification {
 
         val deleteIntent = Intent("com.pivoto.simplesms.DELETE_MESSAGE")
         deleteIntent.component = ComponentName(context, "com.pivoto.simplesms.receiver.SmsReceiver")
-        deleteIntent.putExtra("notiID", notificationId)
-        deleteIntent.putExtra("address", smsMessage.address)
-        deleteIntent.putExtra("date", smsMessage.date)
+        deleteIntent.putExtra(NOTIFICATION_ID_KEY, notificationId)
+        deleteIntent.putExtra(ADDRESS_KEY, smsMessage.address)
+        deleteIntent.putExtra(DATE_KEY, smsMessage.date)
 
         val blockIntent = Intent("com.pivoto.simplesms.BLOCK_CONTACT_MESSAGE")
         blockIntent.component = ComponentName(context, "com.pivoto.simplesms.receiver.SmsReceiver")
-        blockIntent.putExtra("notiID", notificationId)
-        blockIntent.putExtra("address", smsMessage.address)
-        blockIntent.putExtra("date", smsMessage.date)
+        blockIntent.putExtra(NOTIFICATION_ID_KEY, notificationId)
+        blockIntent.putExtra(ADDRESS_KEY, smsMessage.address)
+        blockIntent.putExtra(DATE_KEY, smsMessage.date)
 
         val intentFlags = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         val clickPendingIntent = PendingIntent.getActivity(
@@ -129,17 +131,23 @@ class MessageNotification {
     }
 
     fun clearNotification(extras: Bundle?) {
-        extras?.getInt("notiID", -1)?.also {
-            if(it > 0) {
-                NotificationManagerCompat.from(context).cancel(it)
+        if(extras != null) {
+            val notiId = extras.getInt(NOTIFICATION_ID_KEY, -1)
+            Log.v(Tags.NOTIFICATION, "Clearing notification with ID: $notiId")
+            if(notiId > 0) {
+                NotificationManagerCompat.from(context).cancel(notiId)
             }
+        } else {
+            Log.w(Tags.NOTIFICATION, "Can't clear notification. Extras is null")
         }
-
     }
 
     companion object {
         private const val NEW_SMS_CHANNEL = "new_sms_channel"
         private val NEW_SMS_CHANNEL_DESCRIPTION_RES = R.string.new_message_notification_channel
+        private const val NOTIFICATION_ID_KEY = "notification_id"
+        private const val ADDRESS_KEY = "address"
+        private const val DATE_KEY = "date"
     }
 }
 
