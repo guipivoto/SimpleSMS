@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import com.pivoto.simplesms.conversation.nav.ConversationNav
 import com.pivoto.simplesms.inbox.nav.InboxNav
 import com.pivoto.simplesms.permissions.nav.PermissionsNav
+import com.pivoto.simplesms.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -25,7 +26,10 @@ class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainScreen()
+            AppTheme {
+                MainScreen()
+            }
+
         }
     }
 

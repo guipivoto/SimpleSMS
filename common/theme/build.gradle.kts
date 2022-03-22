@@ -1,8 +1,6 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    kotlin("kapt")
-    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -21,6 +19,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -37,20 +36,5 @@ android {
 
 dependencies {
     // Compose
-    implementation("androidx.compose.ui:ui:${Versions.compose}")
     implementation("androidx.compose.material:material:${Versions.compose}")
-    implementation("androidx.compose.runtime:runtime-livedata:${Versions.compose}")
-
-    // Dagger
-    implementation("com.google.dagger:hilt-android:${Versions.dagger}")
-    kapt("com.google.dagger:hilt-android-compiler:${Versions.dagger}")
-
-    // Navigation
-    implementation("androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigationCompose}")
-    implementation("androidx.test.ext:junit-ktx:1.1.3")
-
-    // Internal
-    implementation(project(":common:theme"))
-    implementation(project(":common:resources"))
-    implementation(project(":repository:message"))
 }

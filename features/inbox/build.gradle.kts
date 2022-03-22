@@ -50,5 +50,7 @@ dependencies {
     implementation("androidx.test.ext:junit-ktx:1.1.3")
 
     // Internal
+    implementation(project(":common:theme"))
+    implementation(project(":common:resources"))
     implementation(project(":repository:message"))
 }

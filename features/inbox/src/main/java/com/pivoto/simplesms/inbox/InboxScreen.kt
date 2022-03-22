@@ -1,7 +1,9 @@
 package com.pivoto.simplesms.inbox
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
@@ -15,6 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pivoto.simplesms.inbox.nav.InboxNav
 import com.pivoto.simplesms.message.Message
+import com.pivoto.simplesms.theme.MessageItemBodyPadding
+import com.pivoto.simplesms.theme.MessageItemTitlePadding
 
 @Composable
 fun InboxScreen(viewModel: InboxScreenViewModel, actionHandler: InboxNav.InboxScreenActions) {
@@ -27,7 +31,10 @@ fun InboxContent(state: State<InboxState?>, actionHandler: InboxNav.InboxScreenA
     when (state.value) {
         is InboxState.Loading -> LoadingInbox()
         is InboxState.Empty -> EmptyInbox()
-        is InboxState.Loaded -> InboxLoaded((state.value as InboxState.Loaded).messageList, actionHandler)
+        is InboxState.Loaded -> InboxLoaded(
+            (state.value as InboxState.Loaded).messageList,
+            actionHandler
+        )
         else -> Unit
     }
 }
@@ -45,7 +52,10 @@ private fun EmptyInbox() {
 @Composable
 private fun InboxLoaded(messageList: List<Message>, actionHandler: InboxNav.InboxScreenActions) {
     LazyColumn {
-        items(messageList) { message ->
+        items(
+            messageList,
+            key = { it.id }
+        ) { message ->
             MessageCard(message, actionHandler)
         }
     }
@@ -55,21 +65,21 @@ private fun InboxLoaded(messageList: List<Message>, actionHandler: InboxNav.Inbo
 fun MessageCard(msg: Message, actionHandler: InboxNav.InboxScreenActions) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.medium, elevation = 1.dp) {
+        shape = MaterialTheme.shapes.medium, elevation = 1.dp
+    ) {
         Column(Modifier.clickable {
             actionHandler.onConversationOpened(msg.address)
         }) {
             Text(
                 text = msg.address,
-                color = MaterialTheme.colors.secondaryVariant,
-                style = MaterialTheme.typography.subtitle2
+                modifier = Modifier.padding(MessageItemTitlePadding),
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.subtitle1
             )
-
-            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = msg.body ?: "null",
-                modifier = Modifier.padding(all = 4.dp),
+                modifier = Modifier.padding(MessageItemBodyPadding),
                 style = MaterialTheme.typography.body2
             )
         }
