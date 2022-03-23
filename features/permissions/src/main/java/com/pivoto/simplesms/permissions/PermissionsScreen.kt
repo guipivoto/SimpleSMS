@@ -11,10 +11,10 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import com.pivoto.simplesms.permissions.nav.PermissionsScreenActions
+import com.pivoto.simplesms.permissions.nav.PermissionsScreenEvents
 
 @Composable
-fun PermissionsScreen(actionHandler: PermissionsScreenActions) {
+fun PermissionsScreen(actionHandler: PermissionsScreenEvents) {
     val context = LocalContext.current
     val permissionScreenState = remember {
         PermissionsScreenStateHolder(context, actionHandler)

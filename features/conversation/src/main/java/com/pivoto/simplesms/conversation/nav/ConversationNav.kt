@@ -1,21 +1,8 @@
 package com.pivoto.simplesms.conversation.nav
 
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import com.pivoto.simplesms.conversation.ConversationScreen
-import com.pivoto.simplesms.conversation.ConversationScreenViewModel
-import javax.inject.Inject
+import com.pivoto.simplesms.contract.Feature
+import com.pivoto.simplesms.contract.FeatureEvents
 
-class ConversationNav @Inject constructor() {
+sealed interface ConversationNav : Feature<ConversationScreenEvents>
 
-    val destination = "Conversation"
-    private val arguments = "/{address}"
-
-    fun createGraph(navGraphBuilder: NavGraphBuilder) {
-        navGraphBuilder.composable(destination.plus(arguments)) {
-            val viewModel = hiltViewModel<ConversationScreenViewModel>()
-            ConversationScreen(viewModel)
-        }
-    }
-}
+interface ConversationScreenEvents : FeatureEvents

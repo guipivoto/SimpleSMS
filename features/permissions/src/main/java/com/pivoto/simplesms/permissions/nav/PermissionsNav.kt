@@ -1,22 +1,11 @@
 package com.pivoto.simplesms.permissions.nav
 
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import com.pivoto.simplesms.permissions.PermissionsScreen
-import javax.inject.Inject
+import com.pivoto.simplesms.contract.Feature
+import com.pivoto.simplesms.contract.FeatureEvents
 
-class PermissionsNav @Inject constructor() {
+sealed interface PermissionsNav : Feature<PermissionsScreenEvents>
 
-    val destination = "Permissions"
-
-    fun createGraph(navGraphBuilder: NavGraphBuilder, actionHandler: PermissionsScreenActions) {
-        navGraphBuilder.composable(destination) {
-            PermissionsScreen(actionHandler)
-        }
-    }
-}
-
-interface PermissionsScreenActions {
+interface PermissionsScreenEvents : FeatureEvents {
 
     fun onPermissionGranted()
 }

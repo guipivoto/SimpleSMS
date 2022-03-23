@@ -60,6 +60,7 @@ dependencies {
     implementation(project(":features:conversation"))
     implementation(project(":repository:message"))
     implementation(project(":repository:contact"))
+    implementation(project(":common:contract"))
     implementation(project(":common:theme"))
     implementation(project(":common:resources"))
     implementation(project(":components:notification"))

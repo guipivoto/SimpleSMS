@@ -1,25 +1,11 @@
 package com.pivoto.simplesms.inbox.nav
 
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import com.pivoto.simplesms.inbox.InboxScreen
-import com.pivoto.simplesms.inbox.InboxScreenViewModel
-import javax.inject.Inject
+import com.pivoto.simplesms.contract.Feature
+import com.pivoto.simplesms.contract.FeatureEvents
 
-class InboxNav @Inject constructor() {
+sealed interface InboxNav : Feature<InboxScreenEvents>
 
-    val destination = "Inbox"
+interface InboxScreenEvents : FeatureEvents {
 
-    fun createGraph(navGraphBuilder: NavGraphBuilder, actionHandler: InboxScreenActions) {
-        navGraphBuilder.composable(destination) {
-            val viewModel = hiltViewModel<InboxScreenViewModel>()
-            InboxScreen(viewModel, actionHandler)
-        }
-    }
-
-    interface InboxScreenActions {
-
-        fun onConversationOpened(messageAddress: String)
-    }
+    fun onConversationOpened(messageAddress: String)
 }

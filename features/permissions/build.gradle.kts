@@ -48,4 +48,7 @@ dependencies {
     // Navigation
     implementation("androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigationCompose}")
     implementation("androidx.test.ext:junit-ktx:1.1.3")
+
+    // Internal
+    implementation(project(":common:contract"))
 }

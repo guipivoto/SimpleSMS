@@ -9,7 +9,7 @@ import android.provider.Telephony
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.pivoto.simplesms.permissions.nav.PermissionsScreenActions
+import com.pivoto.simplesms.permissions.nav.PermissionsScreenEvents
 
 /**
  * This a simple screen state holder to support the UI
@@ -18,7 +18,7 @@ import com.pivoto.simplesms.permissions.nav.PermissionsScreenActions
 class PermissionsScreenStateHolder(
     /*private val */
     context: Context,
-    private val actionHandler: PermissionsScreenActions,
+    private val actionHandler: PermissionsScreenEvents,
 ) {
     private var _permissionState = mutableStateOf<PermissionState>(PermissionState.Idle)
     val permissionState = _permissionState
