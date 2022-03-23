@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="inbox_screen_tittle">Inbox</string>
     <string name="inbox_empty_list">Inbox is empty</string>
-    <string name="inbox_loading_list">Inbox is loading</string>
 </resources>

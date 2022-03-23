@@ -23,5 +23,6 @@ val Typography = Typography()
     )
 )    */
 
+val TopBarTittlePadding = PaddingValues(horizontal = 8.dp)
 val MessageItemBodyPadding = PaddingValues(8.dp, 6.dp, 8.dp, 6.dp)
 val MessageItemTitlePadding = PaddingValues(8.dp, 6.dp, 8.dp, 6.dp)

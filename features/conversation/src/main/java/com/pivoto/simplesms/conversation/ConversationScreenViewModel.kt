@@ -14,7 +14,7 @@ class ConversationScreenViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val conversationAddress: String = savedStateHandle.get<String>("address") ?: ""
+    val conversationAddress: String = savedStateHandle.get<String>("address") ?: ""
     private var _conversationState = MutableLiveData<ConversationState>(ConversationState.Idle)
     val conversationState: LiveData<ConversationState> = _conversationState
 
